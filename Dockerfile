@@ -1,5 +1,5 @@
 # Use official Python image
- FROM python:3.11_slim
+ FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /net
@@ -7,7 +7,7 @@ WORKDIR /net
 # INSTALL FLASK
 RUN  pip insatll flask
 
-#COPY sample.py
+COPY sample.py
     
 #EXPOSE conatiner port
 EXPOSE 8090
