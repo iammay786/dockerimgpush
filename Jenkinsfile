@@ -2,10 +2,10 @@ pipeline {
  agent { label "${LABEL_NAME}" }
 
 environment {
- $IMAGE_NAME = "myimg"
- $IMAGE_TAG= "${BUILD_NUMBER}"
- $CONTAINER_NAME = "webapp"
- $DOCKER_CREDS =credentials(dockerhub-creds)
+ IMAGE_NAME = "myimg"
+ IMAGE_TAG= "${BUILD_NUMBER}"
+ CONTAINER_NAME = "webapp"
+ DOCKER_CREDS =credentials('dockerhub-creds')
 }
 
 stages {
@@ -17,7 +17,7 @@ stages {
 
   stage('BUILD') {
     steps {
-      sh " docker build -y $IMAGE_NAME:$IMAGE_TAG . "
+      sh " docker build -t $IMAGE_NAME:$IMAGE_TAG . "
     }
   }
 
@@ -38,7 +38,7 @@ stages {
     steps {
       sh " docker stop $CONTAINER_NAME || true "
       sh " docker rm $CONTAINER_NAME || true "
-      sh " docker run -d --name $CONTAINER_NAME -p 80:5000 $IMAGE_NAME:IMAGE_TAG "
+      sh " docker run -d --name $CONTAINER_NAME -p 80:5000 $IMAGE_NAME:$IMAGE_TAG "
      }
    }
  }
