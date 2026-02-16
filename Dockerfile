@@ -1,16 +1,16 @@
 # Use official Python image
- FROM python:3.11-slim
+FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /net
 
 # INSTALL FLASK
-RUN  pip insatll flask
+RUN pip install flask
 
-COPY sample.py
-    
-#EXPOSE conatiner port
-EXPOSE 8090
+COPY sample.py .
+
+# Expose container port
+EXPOSE 5000
 
 # Run the app
 CMD ["python", "sample.py"]
