@@ -21,26 +21,25 @@ stages {
     }
   }
 
-  stage('IMAGE_CHECK') { "
-    steps {
-     sh " trivy image --severity CRITICAL --exit-code 0 $IMAGE_NAME:$IMAGE_TAG "
-    } 
-  }
+  stage('IMAGE_CHECK') {
+      steps {
+        sh " trivy image --severity CRITICAL --exit-code 0 $IMAGE_NAME:$IMAGE_TAG "
+      }
+    }
 
-  stage('IMAGE_PUSH') { "
-    steps {
-     sh " echo $DOCKER_CREDS_PSW | docker login -u $DOCKER_CREDS_USR --password-stdin "
-     sh " docker push $IMAGE_NAME:$IMAGE_TAG"
+    stage('IMAGE_PUSH') {
+      steps {
+        sh " echo $DOCKER_CREDS_PSW | docker login -u $DOCKER_CREDS_USR --password-stdin "
+        sh " docker push $IMAGE_NAME:$IMAGE_TAG"
+      }
+    }
+
+    stage('DEPLOY') {
+      steps {
+        sh " docker stop $CONTAINER_NAME || true "
+        sh " docker rm $CONTAINER_NAME || true "
+        sh " docker run -d --name $CONTAINER_NAME -p 80:5000 $IMAGE_NAME:$IMAGE_TAG "
+      }
     }
   }
-
-  stage('DEPLOY') { "
-    steps {
-      sh " docker stop $CONTAINER_NAME || true "
-      sh " docker rm $CONTAINER_NAME || true "
-      sh " docker run -d --name $CONTAINER_NAME -p 80:5000 $IMAGE_NAME:$IMAGE_TAG "
-     }
-   }
- }
 }
-
